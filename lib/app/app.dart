@@ -1,28 +1,23 @@
 import 'package:flutter/material.dart';
 
+import 'router/app_router.dart';
+import 'theme/app_theme.dart';
+
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:dokan_khata_bd/l10n/app_localizations.dart';
+
 class DokanKhataApp extends StatelessWidget {
   const DokanKhataApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Dokan Khata BD',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorSchemeSeed: Colors.green,
-        useMaterial3: true,
-      ),
-      home: const Scaffold(
-        body: Center(
-          child: Text(
-            'Dokan Khata BD',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-      ),
+      theme: AppTheme.lightTheme,
+      routerConfig: appRouter,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
     );
   }
 }
