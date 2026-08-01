@@ -1,6 +1,7 @@
 import 'package:dokan_khata_bd/core/utils/app_formatter.dart';
 import 'package:dokan_khata_bd/shared/widgets/app_button.dart';
 import 'package:dokan_khata_bd/shared/widgets/app_logo.dart';
+import 'package:dokan_khata_bd/shared/widgets/otp_input_field.dart';
 import 'package:flutter/material.dart';
 
 class OtpVerificationPage extends StatefulWidget {
@@ -16,44 +17,26 @@ class OtpVerificationPage extends StatefulWidget {
 }
 
 class _OtpVerificationPageState extends State<OtpVerificationPage> {
-  final List<TextEditingController> controllers =
-  List.generate(6, (_) => TextEditingController());
+  String _enteredOtp = "";
+  bool _canVerify = false;
 
-  final List<FocusNode> focusNodes =
-  List.generate(6, (_) => FocusNode());
-
-  @override
-  void dispose() {
-    for (final controller in controllers) {
-      controller.dispose();
-    }
-
-    for (final node in focusNodes) {
-      node.dispose();
-    }
-
-    super.dispose();
-  }
-
-  Widget otpBox(int index) {
-    return SizedBox(
-      width: 50,
-      child: TextField(
-        controller: controllers[index],
-        focusNode: focusNodes[index],
-        keyboardType: TextInputType.number,
-        textAlign: TextAlign.center,
-        maxLength: 1,
-        decoration: const InputDecoration(
-          counterText: "",
+  void _verifyOtp() {
+    if (_enteredOtp == "123456") {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("OTP Verified"),
         ),
-        onChanged: (value) {
-          if (value.isNotEmpty && index < 5) {
-            FocusScope.of(context).requestFocus(focusNodes[index + 1]);
-          }
-        },
-      ),
-    );
+      );
+
+      // TODO:
+      // Navigate to Create PIN screen
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Invalid OTP"),
+        ),
+      );
+    }
   }
 
   @override
@@ -87,12 +70,14 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
 
               const SizedBox(height: 40),
 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: List.generate(
-                  6,
-                      (index) => otpBox(index),
-                ),
+              OtpInputField(
+                onChanged: (otp) {
+                  setState(() {
+                    _enteredOtp = otp;
+                    _canVerify = otp.length == 6;
+                  });
+                },
+                onCompleted: (otp) {},
               ),
 
               const SizedBox(height: 35),
@@ -113,7 +98,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
 
               AppButton(
                 text: "Verify",
-                onPressed: () {},
+                onPressed: _canVerify ? _verifyOtp : null,
               ),
             ],
           ),
