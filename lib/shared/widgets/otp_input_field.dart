@@ -1,8 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+class OtpInputFieldController {
+  _OtpInputFieldState? _state;
+
+  void clear() {
+    _state?.clear();
+  }
+
+  void requestFocus() {
+    _state?.requestFocus();
+  }
+}
+
 class OtpInputField extends StatefulWidget {
   final int length;
+
+  final OtpInputFieldController? controller;
 
   /// Called whenever OTP changes
   final ValueChanged<String>? onChanged;
@@ -13,6 +27,7 @@ class OtpInputField extends StatefulWidget {
   const OtpInputField({
     super.key,
     this.length = 6,
+    this.controller,
     this.onChanged,
     required this.onCompleted,
   });
@@ -26,14 +41,36 @@ class _OtpInputFieldState extends State<OtpInputField> {
   late final List<FocusNode> _focusNodes;
 
   @override
+  void _fillOtp(String otp) {
+    if (otp.length != widget.length) return;
+
+    for (int i = 0; i < widget.length; i++) {
+      _controllers[i].text = otp[i];
+    }
+
+    _focusNodes.last.unfocus();
+
+    widget.onChanged?.call(otp);
+    widget.onCompleted(otp);
+
+    setState(() {});
+  }
+
+  @override
   void initState() {
     super.initState();
+
+    widget.controller?._state = this;
 
     _controllers =
         List.generate(widget.length, (_) => TextEditingController());
 
     _focusNodes =
         List.generate(widget.length, (_) => FocusNode());
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _focusNodes.first.requestFocus();
+    });
   }
 
   @override
@@ -49,23 +86,39 @@ class _OtpInputFieldState extends State<OtpInputField> {
     super.dispose();
   }
 
+  void clear() {
+    for (final controller in _controllers) {
+      controller.clear();
+    }
+
+    widget.onChanged?.call("");
+  }
+
+  void requestFocus() {
+    _focusNodes.first.requestFocus();
+  }
+
   void _onChanged(String value, int index) {
+    // User pasted entire OTP
+    if (value.length == widget.length) {
+      _fillOtp(value);
+      return;
+    }
+
     // Move to next field
     if (value.isNotEmpty && index < widget.length - 1) {
       _focusNodes[index + 1].requestFocus();
     }
 
-    // Move back when deleting
+    // Move back
     if (value.isEmpty && index > 0) {
       _focusNodes[index - 1].requestFocus();
     }
 
     final otp = _controllers.map((e) => e.text).join();
 
-    // Notify parent whenever OTP changes
     widget.onChanged?.call(otp);
 
-    // Notify when OTP is complete
     if (otp.length == widget.length) {
       widget.onCompleted(otp);
     }
@@ -83,7 +136,7 @@ class _OtpInputFieldState extends State<OtpInputField> {
             focusNode: _focusNodes[index],
             keyboardType: TextInputType.number,
             textAlign: TextAlign.center,
-            maxLength: 1,
+            maxLength: widget.length,
             inputFormatters: [
               FilteringTextInputFormatter.digitsOnly,
             ],

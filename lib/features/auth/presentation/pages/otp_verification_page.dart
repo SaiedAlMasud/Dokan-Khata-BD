@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dokan_khata_bd/core/utils/app_formatter.dart';
 import 'package:dokan_khata_bd/shared/widgets/app_button.dart';
 import 'package:dokan_khata_bd/shared/widgets/app_logo.dart';
@@ -13,14 +15,74 @@ class OtpVerificationPage extends StatefulWidget {
   });
 
   @override
-  State<OtpVerificationPage> createState() => _OtpVerificationPageState();
+  State<OtpVerificationPage> createState() =>
+      _OtpVerificationPageState();
 }
 
 class _OtpVerificationPageState extends State<OtpVerificationPage> {
+  final _otpController = OtpInputFieldController();
+
   String _enteredOtp = "";
   bool _canVerify = false;
+  bool _isVerifying = false;
 
-  void _verifyOtp() {
+  int _secondsRemaining = 30;
+  bool _canResend = false;
+
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _startTimer();
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  void _startTimer() {
+    _timer?.cancel();
+
+    setState(() {
+      _secondsRemaining = 30;
+      _canResend = false;
+    });
+
+    _timer = Timer.periodic(
+      const Duration(seconds: 1),
+          (timer) {
+        if (_secondsRemaining == 0) {
+          timer.cancel();
+
+          setState(() {
+            _canResend = true;
+          });
+
+          return;
+        }
+
+        setState(() {
+          _secondsRemaining--;
+        });
+      },
+    );
+  }
+
+  Future<void> _verifyOtp() async {
+    setState(() {
+      _isVerifying = true;
+    });
+
+    // Simulate API call
+    await Future.delayed(const Duration(seconds: 2));
+
+    setState(() {
+      _isVerifying = false;
+    });
+
     if (_enteredOtp == "123456") {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -29,7 +91,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
       );
 
       // TODO:
-      // Navigate to Create PIN screen
+      // context.go(AppRoutes.createPin);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -37,6 +99,24 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
         ),
       );
     }
+  }
+
+  void _resendOtp() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("OTP Resent"),
+      ),
+    );
+
+    _otpController.clear();
+    _otpController.requestFocus();
+
+    setState(() {
+      _enteredOtp = "";
+      _canVerify = false;
+    });
+
+    _startTimer();
   }
 
   @override
@@ -71,26 +151,28 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
               const SizedBox(height: 40),
 
               OtpInputField(
+                controller: _otpController,
                 onChanged: (otp) {
                   setState(() {
                     _enteredOtp = otp;
                     _canVerify = otp.length == 6;
                   });
                 },
-                onCompleted: (otp) {},
+                onCompleted: (_) {},
               ),
 
               const SizedBox(height: 35),
 
-              const Text(
-                "00:30",
-                style: TextStyle(
+              Text(
+                "00:${_secondsRemaining.toString().padLeft(2, '0')}",
+                style: const TextStyle(
                   fontSize: 18,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
 
               TextButton(
-                onPressed: null,
+                onPressed: _canResend ? _resendOtp : null,
                 child: const Text("Resend OTP"),
               ),
 
@@ -98,6 +180,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
 
               AppButton(
                 text: "Verify",
+                isLoading: _isVerifying,
                 onPressed: _canVerify ? _verifyOtp : null,
               ),
             ],
