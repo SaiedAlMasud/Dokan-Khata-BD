@@ -1,3 +1,5 @@
+import 'package:dokan_khata_bd/features/auth/presentation/pages/confirm_pin_page.dart';
+import 'package:dokan_khata_bd/features/auth/presentation/pages/create_pin_page.dart';
 import 'package:dokan_khata_bd/features/auth/presentation/pages/language_selection_page.dart';
 import 'package:dokan_khata_bd/features/auth/presentation/pages/login_page.dart';
 import 'package:dokan_khata_bd/features/auth/presentation/pages/otp_verification_page.dart';
@@ -29,6 +31,22 @@ final GoRouter appRouter = GoRouter(
 
         return OtpVerificationPage(
           mobileNumber: mobile,
+        );
+      },
+    ),
+
+    GoRoute(
+      path: AppRoutes.createPin,
+      builder: (context, state) => const CreatePinPage(),
+    ),
+
+    GoRoute(
+      path: AppRoutes.confirmPin,
+      builder: (context, state) {
+        final pin = state.extra as String;
+
+        return ConfirmPinPage(
+          pin: pin,
         );
       },
     ),

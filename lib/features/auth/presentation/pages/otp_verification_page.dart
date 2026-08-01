@@ -1,9 +1,12 @@
 import 'dart:async';
 
+import 'package:go_router/go_router.dart';
+import 'package:dokan_khata_bd/app/router/app_routes.dart';
 import 'package:dokan_khata_bd/core/utils/app_formatter.dart';
 import 'package:dokan_khata_bd/shared/widgets/app_button.dart';
 import 'package:dokan_khata_bd/shared/widgets/app_logo.dart';
 import 'package:dokan_khata_bd/shared/widgets/otp_input_field.dart';
+import 'package:dokan_khata_bd/core/services/local_storage_service.dart';
 import 'package:flutter/material.dart';
 
 class OtpVerificationPage extends StatefulWidget {
@@ -79,6 +82,8 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
     // Simulate API call
     await Future.delayed(const Duration(seconds: 2));
 
+    if (!mounted) return;
+
     setState(() {
       _isVerifying = false;
     });
@@ -87,11 +92,19 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("OTP Verified"),
+          duration: Duration(milliseconds: 700),
         ),
       );
 
-      // TODO:
-      // context.go(AppRoutes.createPin);
+      Future.delayed(const Duration(milliseconds: 700), () async {
+        await LocalStorageService.saveMobileNumber(
+          widget.mobileNumber,
+        );
+
+        if (!mounted) return;
+
+        context.go(AppRoutes.createPin);
+      });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
