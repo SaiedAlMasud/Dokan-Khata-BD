@@ -1,7 +1,9 @@
+import 'package:dokan_khata_bd/app/router/app_routes.dart';
 import 'package:dokan_khata_bd/features/auth/presentation/widgets/pin_indicator.dart';
 import 'package:dokan_khata_bd/features/auth/presentation/widgets/pin_keypad.dart';
 import 'package:flutter/material.dart';
 import 'package:dokan_khata_bd/core/services/local_storage_service.dart';
+import 'package:go_router/go_router.dart';
 
 class ConfirmPinPage extends StatefulWidget {
   final String pin;
@@ -62,16 +64,11 @@ class _ConfirmPinPageState extends State<ConfirmPinPage> {
   Future<void> _savePin() async {
     await LocalStorageService.savePin(widget.pin);
 
+    await LocalStorageService.setShopSetupCompleted(true);
+
     if (!mounted) return;
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text("PIN created successfully"),
-        duration: Duration(seconds: 1),
-      ),
-    );
-
-    // TODO: Navigate to Shop Setup
+    context.go(AppRoutes.shopSetup);
   }
 
   @override

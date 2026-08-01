@@ -1,19 +1,35 @@
-import 'package:dokan_khata_bd/l10n/app_localizations.dart';
-import 'package:flutter/material.dart';
+import 'dart:async';
 
-class SplashPage extends StatelessWidget {
+import 'package:dokan_khata_bd/app/router/app_routes.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
 
   @override
+  State<SplashPage> createState() => _SplashPageState();
+}
+
+class _SplashPageState extends State<SplashPage> {
+  @override
+  void initState() {
+    super.initState();
+
+    Timer(const Duration(seconds: 2), () {
+      if (!mounted) return;
+
+      context.go(AppRoutes.languageSelection);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Text(
-          AppLocalizations.of(context)!.welcome,
-          style: const TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
+    return const Scaffold(
+      body: SizedBox.expand(
+        child: Image(
+          image: AssetImage('assets/images/splash_logo.png'),
+          fit: BoxFit.cover,
         ),
       ),
     );

@@ -7,6 +7,7 @@ class AppRoutes {
   static const String otp = '/otp';
   static const createPin = '/create-pin';
   static const confirmPin = '/confirm-pin';
+  static const shopSetup = '/shop-setup';
   static const String register = '/register';
   static const String dashboard = '/dashboard';
 }
