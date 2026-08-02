@@ -36,104 +36,99 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
+      return const Center(
+        child: CircularProgressIndicator(),
       );
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Dashboard"),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            DashboardHeader(
-              ownerName: _shop?.ownerName ?? "",
-              shopName: _shop?.shopName ?? "",
-            ),
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          DashboardHeader(
+            ownerName: _shop?.ownerName ?? "",
+            shopName: _shop?.shopName ?? "",
+          ),
 
-            const SizedBox(height: 24),
+          const SizedBox(height: 24),
 
-            GridView.count(
-              crossAxisCount: 2,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              crossAxisSpacing: 12,
-              mainAxisSpacing: 12,
-              childAspectRatio: 1.2,
-              children: const [
-                SummaryCard(
-                  icon: Icons.attach_money,
-                  title: "Today's Sales",
-                  value: "৳ 0",
-                  color: Colors.green,
-                ),
-                SummaryCard(
-                  icon: Icons.inventory,
-                  title: "Products",
-                  value: "0",
-                  color: Colors.blue,
-                ),
-                SummaryCard(
-                  icon: Icons.people,
-                  title: "Customers",
-                  value: "0",
-                  color: Colors.orange,
-                ),
-                SummaryCard(
-                  icon: Icons.warning_amber,
-                  title: "Low Stock",
-                  value: "0",
-                  color: Colors.red,
-                ),
-              ],
-            ),
+          GridView.count(
+            crossAxisCount: 2,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            crossAxisSpacing: 12,
+            mainAxisSpacing: 12,
+            childAspectRatio: 1.2,
+            children: const [
+              SummaryCard(
+                icon: Icons.attach_money,
+                title: "Today's Sales",
+                value: "৳ 0",
+                color: Colors.green,
+              ),
+              SummaryCard(
+                icon: Icons.inventory,
+                title: "Products",
+                value: "0",
+                color: Colors.blue,
+              ),
+              SummaryCard(
+                icon: Icons.people,
+                title: "Customers",
+                value: "0",
+                color: Colors.orange,
+              ),
+              SummaryCard(
+                icon: Icons.warning_amber,
+                title: "Low Stock",
+                value: "0",
+                color: Colors.red,
+              ),
+            ],
+          ),
 
-            const SizedBox(height: 30),
+          const SizedBox(height: 30),
 
-            const SectionTitle(
-              title: "Quick Actions",
-            ),
+          const SectionTitle(
+            title: "Quick Actions",
+          ),
 
-            const SizedBox(height: 15),
+          const SizedBox(height: 15),
 
-            GridView.count(
-              crossAxisCount: 2,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              crossAxisSpacing: 12,
-              mainAxisSpacing: 12,
-              childAspectRatio: 1.3,
-              children: [
-                QuickActionCard(
-                  icon: Icons.point_of_sale,
-                  title: "New Sale",
-                  onTap: () {},
-                ),
-                QuickActionCard(
-                  icon: Icons.add_box,
-                  title: "Add Product",
-                  onTap: () {},
-                ),
-                QuickActionCard(
-                  icon: Icons.person_add,
-                  title: "Customer",
-                  onTap: () {},
-                ),
-                QuickActionCard(
-                  icon: Icons.local_shipping,
-                  title: "Supplier",
-                  onTap: () {},
-                ),
-              ],
-            ),
-          ],
-        ),
+          GridView.count(
+            crossAxisCount: 2,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            crossAxisSpacing: 12,
+            mainAxisSpacing: 12,
+            childAspectRatio: 1.3,
+            children: [
+              QuickActionCard(
+                icon: Icons.point_of_sale,
+                title: "New Sale",
+                onTap: () {},
+              ),
+              QuickActionCard(
+                icon: Icons.add_box,
+                title: "Add Product",
+                onTap: () {},
+              ),
+              QuickActionCard(
+                icon: Icons.person_add,
+                title: "Customer",
+                onTap: () {},
+              ),
+              QuickActionCard(
+                icon: Icons.local_shipping,
+                title: "Supplier",
+                onTap: () {},
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 30),
+        ],
       ),
     );
   }

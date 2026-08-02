@@ -9,5 +9,5 @@ class AppRoutes {
   static const confirmPin = '/confirm-pin';
   static const shopSetup = '/shop-setup';
   static const String register = '/register';
-  static const String dashboard = '/dashboard';
+  static const home = "/home";
 }

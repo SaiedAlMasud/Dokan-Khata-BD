@@ -74,7 +74,7 @@ class _ShopSetupPageState extends State<ShopSetupPage> {
 
       if (!mounted) return;
 
-      context.go(AppRoutes.dashboard);
+      context.go(AppRoutes.home);
     } catch (e) {
       if (!mounted) return;
 

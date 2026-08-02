@@ -5,13 +5,14 @@ import 'package:dokan_khata_bd/features/auth/presentation/pages/login_page.dart'
 import 'package:dokan_khata_bd/features/auth/presentation/pages/otp_verification_page.dart';
 import 'package:dokan_khata_bd/features/auth/presentation/pages/splash_page.dart';
 import 'package:dokan_khata_bd/features/dashboard/presentation/pages/dashboard_page.dart';
+import 'package:dokan_khata_bd/features/home/presentation/pages/home_page.dart';
 import 'package:dokan_khata_bd/features/shop/presentation/pages/shop_setup_page.dart';
 import 'package:go_router/go_router.dart';
 
 import 'app_routes.dart';
 
 final GoRouter appRouter = GoRouter(
-  initialLocation: AppRoutes.dashboard,
+  initialLocation: AppRoutes.home,
 
   routes: [
     GoRoute(
@@ -59,8 +60,8 @@ final GoRouter appRouter = GoRouter(
     ),
 
     GoRoute(
-      path: AppRoutes.dashboard,
-      builder: (context, state) => const DashboardPage(),
+      path: AppRoutes.home,
+      builder: (context, state) => const HomePage(),
     ),
   ],
 );
